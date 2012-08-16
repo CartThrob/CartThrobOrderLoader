@@ -7,7 +7,7 @@ $plugin_info = array(
 						'pi_author'			=> 'Chris Newton',
 						'pi_author_url'		=> 'http://www.cartthrob.com',
 						'pi_description'	=> 'This reloads an existing order to the cart. This does not reload subscriptions or permissions attached to items. ',
-						'pi_usage'			=> Cartthrob_quantity_limiter::usage()
+						'pi_usage'			=> Cartthrob_order_loader::usage()
 					);
 
 class Cartthrob_order_loader
@@ -95,7 +95,7 @@ class Cartthrob_order_loader
 
 Docs: 
 
-This will all of the items from a past order
+This will load all of the items from a past order
 {exp:cartthrob_order_loader:load entry_id="123"}
 
 
