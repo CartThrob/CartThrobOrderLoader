@@ -15,7 +15,7 @@ class Cartthrob_order_loader
  
 	function __construct()
 	{
-		$this->EE =& get_instance();
+		$this->EE = get_instance();
 		$this->EE->load->add_package_path(PATH_THIRD.'cartthrob/');
 		$this->EE->load->library('cartthrob_loader');
 		$this->EE->load->library('number');
@@ -44,7 +44,10 @@ class Cartthrob_order_loader
 			'no_tax',
 			'no_shipping',
 			'license_number',
+			'entry_date',
+			'discount',
 		); 
+
 		foreach ($order_items  as $key => $item)
 		{
  			$data = array(
@@ -55,9 +58,9 @@ class Cartthrob_order_loader
 			$data['no_shipping'] = bool_string(element("no_shipping", $item)); 
 			$data['no_tax'] = bool_string(element("no_tax", $item)); 
 
-			$data['item_options'] =  array_diff_key($item, array_flip($default_columns)); 
+			$data['item_options'] =  array_diff_key($item, array_flip($default_columns));
 
-			if (! bool_string(element("on_the_fly", $item,"0")))
+			if ( (! bool_string(element("on_the_fly", $item,"0")) && ! element("nominal_charge", $item)) && ! (ee()->TMPL->fetch_param('on_the_fly') !== FALSE && bool_string(ee()->TMPL->fetch_param('on_the_fly'))) )
 			{
 				$data['class'] = 'product';
 			}
@@ -68,15 +71,32 @@ class Cartthrob_order_loader
 				$data['shipping'] = element("shipping", $item); 
 				$data['title'] = element("title",$item);
 			}
-		
+
 			$new_item = $this->EE->cartthrob->cart->add_item($data);
 		
-			if ($new_item && $value = element("license_number", $item))
+			if ($new_item)
 			{
-				$new_item->set_meta('license_number', TRUE);
+				if ($value = element("license_number", $item))
+				{
+					$new_item->set_meta('license_number', TRUE);
+				}
+				// Price may be set by something else, so let's set it back ot the original order's price i.e. price multiplier
+				if (bool_string(ee()->TMPL->fetch_param('update_price')) && (float) element("price",$item) != (float) $new_item->price())
+				{
+					$new_item->update(array('price' => element('price', $item), 'class' => 'default'));
+				}
+			}
+			
+			// cartthrob_add_to_cart_end hook
+			if (ee()->extensions->active_hook('cartthrob_add_to_cart_end') === true) {
+				ee()->extensions->call('cartthrob_add_to_cart_end', $new_item);
+				if (ee()->extensions->end_script === true) {
+					return;
+				}
 			}
 
 		} 
+
 		if ($this->EE->cartthrob->cart->check_inventory())
 		{
 			$this->EE->cartthrob->cart->save(); 
@@ -88,7 +108,7 @@ class Cartthrob_order_loader
 		}
  	}
  
-	public function usage()
+	public static function usage()
 	{
 		ob_start();
 ?>
@@ -97,6 +117,7 @@ Docs:
 
 This will load all of the items from a past order
 {exp:cartthrob_order_loader:load entry_id="123"}
+{exp:cartthrob_order_loader:load entry_id="123" on_the_fly="no" update_price="yes"}
 
 
 <?php
