@@ -1,11 +1,14 @@
 <?php
 
-return array(
-    'author'      => 'Chris Newton',
-    'author_url'  => 'http://www.cartthrob.com',
-    'name'        => 'CartThrob Order Loader',
+define('CARTTHROB_ORDER_LOADER_NAME', 'CartThrob Order Loader');
+define('CARTTHROB_ORDER_LOADER_VERSION', '2.0.0');
+
+return [
+    'author'      => 'Foster Made',
+    'author_url'  => 'https://cartthrob.com',
+    'docs_url'    => '',
+    'name'        => CARTTHROB_ORDER_LOADER_NAME,
     'description' => 'This reloads an existing order to the cart. This does not reload subscriptions or permissions attached to items.',
-    'version'     => '1',
-    'namespace'   => '\\',
-    'docs_url'    => 'https://github.com/CartThrob/plugin-load-order/tree/master/cartthrob_order_loader'
-);
+    'version'     => CARTTHROB_ORDER_LOADER_VERSION,
+    'namespace'   => 'Cartthrob\OrderLoader',
+];

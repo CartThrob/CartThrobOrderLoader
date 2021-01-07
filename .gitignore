@@ -1,0 +1,16 @@
+# OPERATING SYSTEM
+.DS_Store
+__MACOSX
+.env
+.node_modules
+.vagrant
+node_modules
+npm-debug.log
+ubuntu-xenial-16.04-cloudimg-console.log
+
+# MISC
+__psds
+.idea/
+/vendor/
+composer.lock
+/public/cache/*
