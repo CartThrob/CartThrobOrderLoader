@@ -1,7 +1,7 @@
 <?php
 
-define('CARTTHROB_ORDER_LOADER_NAME', 'CartThrob Order Loader');
-define('CARTTHROB_ORDER_LOADER_VERSION', '2.0.0');
+const CARTTHROB_ORDER_LOADER_NAME = 'CartThrob Order Loader';
+const CARTTHROB_ORDER_LOADER_VERSION = '2.0.0';
 
 return [
     'author'      => 'Foster Made',

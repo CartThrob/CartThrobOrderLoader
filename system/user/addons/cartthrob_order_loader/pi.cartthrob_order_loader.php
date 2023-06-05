@@ -4,8 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cartthrob_order_loader
 {
- 
-	function __construct()
+	public function __construct()
 	{
 		ee()->load->add_package_path(PATH_THIRD.'cartthrob/');
 		ee()->load->library('cartthrob_loader');
@@ -16,7 +15,8 @@ class Cartthrob_order_loader
 	{
 		ee()->load->model("order_model");
 
-		$order_items = ee()->order_model->get_order_items(ee()->TMPL->fetch_param('entry_id'));
+        $return = ee()->TMPL->fetch_param('return') ?? 'store/view_cart';
+		$order_items = ee()->order_model->getOrderItems(ee()->TMPL->fetch_param('entry_id'));
 
 		if (!$order_items) {
 			return false;
@@ -62,6 +62,11 @@ class Cartthrob_order_loader
 				$data['title'] = element("title",$item);
 			}
 
+            if(isset($data['item_options']['site_id'])) {
+                $data['site_id'] = $data['item_options']['site_id'];
+                unset($data['item_options']['site_id']);
+            }
+
 			$new_item = ee()->cartthrob->cart->add_item($data);
 		
 			if ($new_item) {
@@ -91,10 +96,10 @@ class Cartthrob_order_loader
 
 		if (ee()->cartthrob->cart->check_inventory()) {
 			ee()->cartthrob->cart->save();
-
-			return true;
-		} else {
-			return false;
 		}
+
+        ee()->load->helper('url');
+        redirect($return);
+        exit;
  	}
 }
