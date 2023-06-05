@@ -15,6 +15,7 @@ class Cartthrob_order_loader
 	{
 		ee()->load->model("order_model");
 
+        $return = ee()->TMPL->fetch_param('return') ?? 'store/view_cart';
 		$order_items = ee()->order_model->getOrderItems(ee()->TMPL->fetch_param('entry_id'));
 
 		if (!$order_items) {
@@ -61,6 +62,11 @@ class Cartthrob_order_loader
 				$data['title'] = element("title",$item);
 			}
 
+            if(isset($data['item_options']['site_id'])) {
+                $data['site_id'] = $data['item_options']['site_id'];
+                unset($data['item_options']['site_id']);
+            }
+
 			$new_item = ee()->cartthrob->cart->add_item($data);
 		
 			if ($new_item) {
@@ -90,10 +96,10 @@ class Cartthrob_order_loader
 
 		if (ee()->cartthrob->cart->check_inventory()) {
 			ee()->cartthrob->cart->save();
-
-			return true;
-		} else {
-			return false;
 		}
+
+        ee()->load->helper('url');
+        redirect($return);
+        exit;
  	}
 }
