@@ -4,8 +4,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cartthrob_order_loader
 {
- 
-	function __construct()
+	public function __construct()
 	{
 		ee()->load->add_package_path(PATH_THIRD.'cartthrob/');
 		ee()->load->library('cartthrob_loader');
@@ -16,7 +15,7 @@ class Cartthrob_order_loader
 	{
 		ee()->load->model("order_model");
 
-		$order_items = ee()->order_model->get_order_items(ee()->TMPL->fetch_param('entry_id'));
+		$order_items = ee()->order_model->getOrderItems(ee()->TMPL->fetch_param('entry_id'));
 
 		if (!$order_items) {
 			return false;
