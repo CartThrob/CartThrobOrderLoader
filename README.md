@@ -1,8 +1,9 @@
-plugin-load-order
-=================
+# CartThrobOrderLoader
 
-Loads a previous order into the cart. 
+* [Build Process](/documentation/build.md)    
+* [Release Process](/documentation/release.md)
+* [Changelog](/documentation/changelog.md)    
 
-Installation: move file to system > expressionengine > third_party 
+## Code Quality
 
-This add-on is provided as-is at no cost with no warranty expressed or implied. Support is not included. 
+* Prior to committing, run `php-cs-fixer fix` to validate code formatting.
